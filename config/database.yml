@@ -1,0 +1,46 @@
+# MySQL. Versions 5.6.4 and up are supported.
+#
+# Install the MySQL driver
+#   gem install mysql2
+#
+# Ensure the MySQL gem is defined in your Gemfile
+#   gem "mysql2"
+#
+# And be sure to use new-style password hashing:
+#   https://dev.mysql.com/doc/refman/5.7/en/password-hashing.html
+#
+default: &default
+  adapter: mysql2
+  encoding: utf8mb4
+  max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: <%= ENV.fetch("DB_USER") { "root" } %>
+  password: <%= ENV.fetch("DB_PASSWORD") { "password" } %>
+  host: <%= ENV.fetch("DB_HOST") { "127.0.0.1" } %>
+
+# Aponta para o mesmo banco da recopev-api
+development:
+  <<: *default
+  database: recopev_api
+
+test:
+  <<: *default
+  database: recopev_api_test
+
+production:
+  primary: &primary_production
+    <<: *default
+    database: <%= ENV.fetch("DB_NAME") { "recopev_production" } %>
+    username: <%= ENV.fetch("DB_USER") { "recopev" } %>
+    password: <%= ENV.fetch("DB_PASSWORD") { "password" } %>
+  cache:
+    <<: *primary_production
+    database: recopev_production_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *primary_production
+    database: recopev_production_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *primary_production
+    database: recopev_production_cable
+    migrations_paths: db/cable_migrate
