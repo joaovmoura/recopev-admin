@@ -29,18 +29,24 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: <%= ENV.fetch("DB_NAME") { "recopev_production" } %>
+    database:  <%= ENV.fetch("DB_NAME") { "recopev_production" } %>
     username: <%= ENV.fetch("DB_USER") { "recopev" } %>
     password: <%= ENV.fetch("DB_PASSWORD") { "password" } %>
   cache:
     <<: *primary_production
-    database: recopev_production_cache
+    database:  <%= ENV.fetch("DB_NAME") { "recopev_production" } %>
+    username: <%= ENV.fetch("DB_USER") { "recopev" } %>
+    password: <%= ENV.fetch("DB_PASSWORD") { "password" } %>
     migrations_paths: db/cache_migrate
   queue:
     <<: *primary_production
-    database: recopev_production_queue
+    database:  <%= ENV.fetch("DB_NAME") { "recopev_production" } %>
+    username: <%= ENV.fetch("DB_USER") { "recopev" } %>
+    password: <%= ENV.fetch("DB_PASSWORD") { "password" } %>
     migrations_paths: db/queue_migrate
   cable:
     <<: *primary_production
-    database: recopev_production_cable
+    database:  <%= ENV.fetch("DB_NAME") { "recopev_production" } %>
+    username: <%= ENV.fetch("DB_USER") { "recopev" } %>
+    password: <%= ENV.fetch("DB_PASSWORD") { "password" } %>
     migrations_paths: db/cable_migrate
